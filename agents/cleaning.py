@@ -50,6 +50,22 @@ def clean_data(df):
 
     report["missing_values_filled"] = filled
 
+    # ----------------------------
+    # Clean Phone Numbers
+    # ----------------------------
+    if "Phone" in cleaned_df.columns:
+
+        cleaned_df["Phone"] = (
+            cleaned_df["Phone"]
+            .astype(str)
+            .str.replace(r"\.0$", "", regex=True)
+            .str.replace(r"\D", "", regex=True)
+        )
+
+        cleaned_df["Phone"] = cleaned_df["Phone"].apply(
+            lambda x: x[-10:] if len(x) >= 10 else x
+        )
+
     report["rows_after"] = cleaned_df.shape[0]
 
     return cleaned_df, report
